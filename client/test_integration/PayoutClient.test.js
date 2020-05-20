@@ -12,7 +12,7 @@ const EMPTY_ADDRESS = '0x0000000000000000000000000000000000000000';
 const LinkTokenAddress = "0x20fE562d797A42Dcb3399062AE9546cd06f63280";
 const PayoutOracleAddress = "0x2672708476E5a655B569bB9fB206bADb396C6444";
 
-const ADAPTER_POST_JOB_ID = "e1d97ca19044448eaa783c8010b72b1b";
+const ADAPTER_POST_JOB_ID = "52de582e45624c7086c0419ba4c8c243";
 const PAYMENT = 1;
 
 contract('Payout Integration Tests', async (accounts) => {
