@@ -1,0 +1,34 @@
+{
+  "name": "ChainlinkOracleClient",
+  "version": "1.0.0",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "author": "",
+  "license": "ISC",
+  "keywords": [],
+  "description": "",
+  "scripts": {
+    "version": "truffle version",
+    "migrate": "truffle migrate",
+    "compile": "truffle compile",
+    "test": "truffle test test/*",
+    "test-integration": "truffle test test_integration/*",
+    "ganache": "ganache-cli -d"
+  },
+  "devDependencies": {
+    "@gnosis.pm/mock-contract": "2.0.4",
+    "chainlink": "^0.6.4",
+    "ganache-cli": "6.4.3",
+    "ganache-time-traveler": "^1.0.5",
+    "openzeppelin-solidity": "1.12.0",
+    "truffle": "^5.0.19",
+    "truffle-assertions": "^0.9.0"
+  },
+  "dependencies": {
+    "bignumber.js": "^9.0.0",
+    "dotenv": "^8.1.0",
+    "truffle-hdwallet-provider": "^1.0.16"
+  }
+}

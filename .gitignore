@@ -1,0 +1,11 @@
+**/node_modules/*
+/build
+package-lock.json
+*.swp
+*.orig
+.env
+/web/src/contracts/*.json
+venv
+.idea
+.api
+.password

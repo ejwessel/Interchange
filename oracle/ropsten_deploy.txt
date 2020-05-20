@@ -1,0 +1,71 @@
+yarn flatten contracts/Oracle.sol && yarn migrate --network ropsten; sleep 40; yarn verify Oracle flatten/Flattened.sol --network ropsten
+yarn run v1.22.4
+warning package.json: No license field
+$ truffle run flatten contracts/Oracle.sol
+artifactSource: contracts/Oracle.sol
+Flatten file generated: flatten/Flattened.sol
+✨  Done in 4.38s.
+yarn run v1.22.4
+warning package.json: No license field
+$ truffle migrate --skip-dry-run --network ropsten
+
+Compiling your contracts...
+===========================
+> Compiling ./flatten/Flattened.sol
+> Artifacts written to /Users/ejwessel/Dev/ChainlinkOracle/build/contracts
+> Compiled successfully using:
+   - solc: 0.4.24+commit.e67f0147.Emscripten.clang
+
+
+
+Starting migrations...
+======================
+> Network name:    'ropsten'
+> Network id:      3
+> Block gas limit: 8000029 (0x7a121d)
+
+
+1_oracle_migration.js
+=====================
+
+   Replacing 'Oracle'
+   ------------------
+   > transaction hash:    0x1d6f5b286212f946f798ad6eeacddab15b7168096e8a4c5c3d95b640d774639b
+   > Blocks: 1            Seconds: 16
+   > contract address:    0x2672708476E5a655B569bB9fB206bADb396C6444
+   > block number:        7743190
+   > block timestamp:     1587249055
+   > account:             0xb893D8F6779842959C1dfC3095b1c62ceAA16703
+   > balance:             19.3113597276
+   > gas used:            1714992 (0x1a2b30)
+   > gas price:           20 gwei
+   > value sent:          0 ETH
+   > total cost:          0.03429984 ETH
+
+   > Saving artifacts
+   -------------------------------------
+   > Total cost:          0.03429984 ETH
+
+
+Summary
+=======
+> Total deployments:   1
+> Final cost:          0.03429984 ETH
+
+
+✨  Done in 44.53s.
+yarn run v1.22.4
+warning package.json: No license field
+$ truffle run verify Oracle flatten/Flattened.sol --network ropsten
+Verifying Oracle
+Pending in queue
+Pass - Verified: https://ropsten.etherscan.io/address/0x2672708476E5a655B569bB9fB206bADb396C6444#contracts
+Starting the IPFS Upload
+Data IPFS Uploaded
+{ message:
+   'Mismatch solidity bytecode and uploaded content. With expectedHash undefined',
+  url: 'dweb:/ipfs/QmUMahKhVRKFVQaJS6WBbnQyftc5ZBvXbFoi5UeeXdV7J3',
+  hash: 'QmUMahKhVRKFVQaJS6WBbnQyftc5ZBvXbFoi5UeeXdV7J3' }
+
+Successfully verified 1 contract(s).
+✨  Done in 18.03s.

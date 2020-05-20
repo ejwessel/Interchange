@@ -1,0 +1,15 @@
+{
+  "scripts": {
+    "clean": "rm -rf ./build; rm -rf ./flatten",
+    "compile": "yarn clean; truffle compile",
+    "migrate": "truffle migrate --skip-dry-run",
+    "flatten": "truffle run flatten",
+    "verify": "truffle run verify"
+  },
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "truffle-flatten": "^1.0.8",
+    "truffle-hdwallet-provider": "^1.0.17",
+    "truffle-verify": "^1.0.8"
+  }
+}

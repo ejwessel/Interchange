@@ -1,0 +1,3 @@
+Flask==1.1.2
+paypal-payouts-sdk==1.0.0
+python-dotenv==0.13.0
