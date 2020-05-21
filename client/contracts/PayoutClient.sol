@@ -6,7 +6,6 @@ import "link_token/contracts/token/linkERC20.sol";
 import 'openzeppelin-solidity/contracts/ownership/Ownable.sol';
 
 contract PayoutClient is ChainlinkClient, Ownable {
-    string[] public path;
     address public linkToken;
     address public oracle;
     mapping(bytes32 => bool) public requestIdStatus;
