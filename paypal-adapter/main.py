@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 import os
 import json
+import math
 from paypalpayoutssdk.core import PayPalHttpClient, SandboxEnvironment, LiveEnvironment
 from paypalpayoutssdk.payouts import PayoutsGetRequest, PayoutsPostRequest
 from paypalhttp import HttpError
@@ -40,8 +41,11 @@ def post_payout():
     job_id = data['id']
     trx_hash = data['meta']['initiator']['transactionHash']
     body = json.loads(data['data']['body'])
-    value = body['value']
+    eth_value = float(body['value']) / math.pow(10.0, 18)
     receiver = body['receiver_email']
+
+    # find out the eth_value to USD conversion in order to pay the correct amount out
+    # usd_value = 0.0
 
     # Construct a request object and set desired parameters
     # Here, PayoutsPostRequest()() creates a POST request to /v1/payments/payouts
@@ -57,12 +61,13 @@ def post_payout():
             "note": f"{trx_hash}",
             "amount": {
                 "currency": "USD",
-                "value": f"{value}"
+                "value": f"{eth_value}"
             },
             "receiver": f"{receiver}",
             "sender_item_id": f"{job_id}"
         }]
     }
+    print(f"Payout request: {body}")
     paypal_request = PayoutsPostRequest()
     paypal_request.request_body(body)
 
@@ -74,7 +79,7 @@ def post_payout():
             "jobRunID": job_id,
             "status": str(response.status_code)
         }
-        print(f"return data: {return_data}")
+        print(f"Return data: {return_data}")
         return jsonify(return_data)
     except IOError as ioe:
         print(ioe)
@@ -82,7 +87,7 @@ def post_payout():
             "jobRunID": job_id,
             "status": str(ioe.status_code)
         }
-        print(f"return data: {return_data}")
+        print(f"Return data: {return_data}")
         return jsonify(return_data)
 
 if __name__ == '__main__':
