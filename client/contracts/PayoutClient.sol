@@ -25,20 +25,14 @@ contract PayoutClient is ChainlinkClient, Ownable {
      * @dev remits requestId for a given sender
      * @param uint256 the payment to the oracle in order to fetch a random word
      */
-    function requestPayout(bytes32 job_id, uint256 payment) public {
-        // check that this contract has been given access to LINK
-        require(linkERC20(linkToken).allowance(msg.sender, this) >= 1, "CONTRACT_APPROVAL_ERROR");
-
-        // check that the user has enough LINK on account
-        require(linkERC20(linkToken).balanceOf(msg.sender) >= payment, "USER_INSUFFICIENT_FUNDS");
-
-        //transfer LINK to this contract so it can request
-        require(linkERC20(linkToken).transferFrom(msg.sender, this, payment), "TRANSFER_FUNDS_ERROR");
+    function requestPayout(bytes32 job_id) public {
+        require(msg.value > 0, "ETHER_MUST_BE_PROVIDED")
+        oracle.transfer(msg.value)
 
         // newRequest takes a JobID, a callback address, and callback function as input
         Chainlink.Request memory req = buildChainlinkRequest(job_id, this, this.fullfillRequest.selector);
-        req.add("body", "{\"receiver_email\":\"sb-nbsys1565094@personal.example.com\",\"value\":10}");
-        bytes32 requestId = sendChainlinkRequest(req, payment);
+        req.add("body", "{\"receiver_email\":\"sb-nbsys1565094@personal.example.com\",\"value\":\"msg.value\"}");
+        bytes32 requestId = sendChainlinkRequest(req, 0);
 
         emit RequestPayout(msg.sender, requestId);
     }
