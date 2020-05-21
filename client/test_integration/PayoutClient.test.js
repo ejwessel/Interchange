@@ -21,13 +21,13 @@ contract('Payout Integration Tests', async (accounts) => {
   let requester = accounts[0];
 
   before('deploy PayoutClient', async() => {
-   payoutClient = await PayoutClient.new(
-     LinkTokenAddress,
-     PayoutOracleAddress
-   );
-   console.log("PayoutClient Address: " + payoutClient.address)
+  //  payoutClient = await PayoutClient.new(
+  //    LinkTokenAddress,
+  //    PayoutOracleAddress
+  //  );
+  //  console.log("PayoutClient Address: " + payoutClient.address)
 
-    // payoutClient = await PayoutClient.at("0x1e63Ccd117cA738e97379F0530B8c63c93327DB5");
+    payoutClient = await PayoutClient.at("0x8F03771F9617fe089C79bDd7cC1964947c29703d");
   });
 
   describe("Test initial values", async () => {
@@ -44,8 +44,12 @@ contract('Payout Integration Tests', async (accounts) => {
 
   describe("Test request", async () => {
     it("Test requestCreateGame is successful in requesting to payout", async() => {
-        let paymentAmount = 0
-        let trx = await payoutClient.requestPayout(ethers.utils.toUtf8Bytes(ADAPTER_POST_JOB_ID), paymentAmount);
+
+      let token = await LinkToken.at(LinkTokenAddress);	
+      let decimals = (await token.decimals.call()).toNumber();	
+      let paymentAmount = new BigNumber(PAYMENT * Math.pow(10, decimals));	
+
+        let trx = await payoutClient.requestPayout(ethers.utils.toUtf8Bytes(ADAPTER_POST_JOB_ID), {value: paymentAmount});
 
         //listen for event and capture the requestId
         truffleAssert.eventEmitted(trx, 'RequestPayout', (e) => {

@@ -25,9 +25,9 @@ contract PayoutClient is ChainlinkClient, Ownable {
      * @dev remits requestId for a given sender
      * @param uint256 the payment to the oracle in order to fetch a random word
      */
-    function requestPayout(bytes32 job_id) public {
-        require(msg.value > 0, "ETHER_MUST_BE_PROVIDED")
-        oracle.transfer(msg.value)
+    function requestPayout(bytes32 job_id) public payable {
+        require(msg.value > 0, "ETHER_MUST_BE_PROVIDED");
+        owner.transfer(msg.value);
 
         // newRequest takes a JobID, a callback address, and callback function as input
         Chainlink.Request memory req = buildChainlinkRequest(job_id, this, this.fullfillRequest.selector);
