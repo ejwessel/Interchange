@@ -27,7 +27,7 @@ contract('Payout Integration Tests', async (accounts) => {
   //  );
   //  console.log("PayoutClient Address: " + payoutClient.address)
 
-    payoutClient = await PayoutClient.at("0x8F03771F9617fe089C79bDd7cC1964947c29703d");
+    payoutClient = await PayoutClient.at("0x92F7453e9ACBcE4e2aB4A08Ba71EA0C34a8Ec246");
   });
 
   describe("Test initial values", async () => {
@@ -49,18 +49,22 @@ contract('Payout Integration Tests', async (accounts) => {
       let decimals = (await token.decimals.call()).toNumber();	
       let paymentAmount = new BigNumber(PAYMENT * Math.pow(10, decimals));	
 
-        let trx = await payoutClient.requestPayout(ethers.utils.toUtf8Bytes(ADAPTER_POST_JOB_ID), {value: paymentAmount});
+      let trx = await payoutClient.requestPayout(
+        ethers.utils.toUtf8Bytes(ADAPTER_POST_JOB_ID), 
+        "sb-nbsys1565094@personal.example.com", 
+        {value: paymentAmount}
+      );
 
-        //listen for event and capture the requestId
-        truffleAssert.eventEmitted(trx, 'RequestPayout', (e) => {
-            //capture requestId
-            requestId = e.requestId;
-            return e.sender === requester;
-        }); 
+      //listen for event and capture the requestId
+      truffleAssert.eventEmitted(trx, 'RequestPayout', (e) => {
+          //capture requestId
+          requestId = e.requestId;
+          return e.sender === requester;
+      }); 
 
-        console.log("Request ID: " + requestId)
+      console.log("Request ID: " + requestId)
 
-        // NOTE: at this point the user would be waiting for the oracle to call the contract back
+      // NOTE: at this point the user would be waiting for the oracle to call the contract back
     });
     
     it("Test oracle callback fullfillRequest", async() => {
