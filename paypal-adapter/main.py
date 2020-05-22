@@ -117,7 +117,7 @@ def fetch_eth_usd_rate():
     try:
         response = session.get(CMC_URL)
         data = json.loads(response.text)
-        print(f"cmc data: {data}")
+        print(f"CMC data: {data}")
         price = data['data']['ETH']['quote']['USD']['price']
         return price
     except (ConnectionError, Timeout, TooManyRedirects) as e:
