@@ -11,20 +11,22 @@ from paypalhttp import HttpError
 from dotenv import load_dotenv
 load_dotenv(verbose=True)
 
-CLIENT_ID = os.environ["PAYPAL-CLIENT-ID"] if 'PAYPAL-CLIENT-ID' in os.environ else "PAYPAL-CLIENT-ID"
-CLIENT_SECRET = os.environ["PAYPAL-CLIENT-SECRET"] if 'PAYPAL-CLIENT-SECRET' in os.environ else "PAYPAL-CLIENT-SECRET"
-
 if 'DEVELOPMENT' in os.environ and bool(os.environ['DEVELOPMENT']):
-    print("development mode")
+    print("Development Mode")
+    CLIENT_ID = os.environ["PAYPAL-CLIENT-ID"] if 'PAYPAL-CLIENT-ID' in os.environ else "PAYPAL-CLIENT-ID"
+    CLIENT_SECRET = os.environ["PAYPAL-CLIENT-SECRET"] if 'PAYPAL-CLIENT-SECRET' in os.environ else "PAYPAL-CLIENT-SECRET"
     CMC_KEY = os.environ["X-CMC_SANDBOX_API_KEY"] if 'X-CMC_SANDBOX_API_KEY' in os.environ else "X-CMC_SANDBOX_API_KEY"
     CMC_URL = os.environ["CMC_SANDBOX_URL"] if 'CMC_SANDBOX_URL' in os.environ else "CMC_SANDBOX_URL"
+    environment = SandboxEnvironment(client_id=CLIENT_ID, client_secret=CLIENT_SECRET)
 else:
-    print("live mode")
+    print("Live Mode")
+    CLIENT_ID = os.environ["PAYPAL-CLIENT-ID"] if 'PAYPAL-CLIENT-ID' in os.environ else "PAYPAL-CLIENT-ID"
+    CLIENT_SECRET = os.environ["PAYPAL-CLIENT-SECRET"] if 'PAYPAL-CLIENT-SECRET' in os.environ else "PAYPAL-CLIENT-SECRET"
     CMC_KEY = os.environ["X-CMC_PRO_API_KEY"] if 'X-CMC_PRO_API_KEY' in os.environ else "X-CMC_PRO_API_KEY"
     CMC_URL = os.environ["CMC_URL"] if 'CMC_URL' in os.environ else "CMC_URL"
     # TODO: ADD LIVE ENVIRONMENT HERE
+    # environment = SandboxEnvironment(client_id=CLIENT_ID, client_secret=CLIENT_SECRET)
 
-environment = SandboxEnvironment(client_id=CLIENT_ID, client_secret=CLIENT_SECRET)
 client = PayPalHttpClient(environment)
 
 # If `entrypoint` is not defined in app.yaml, App Engine will look for an app
