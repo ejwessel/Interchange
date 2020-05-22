@@ -12,7 +12,7 @@ const EMPTY_ADDRESS = '0x0000000000000000000000000000000000000000';
 const LinkTokenAddress = "0x20fE562d797A42Dcb3399062AE9546cd06f63280";
 const PayoutOracleAddress = "0x2672708476E5a655B569bB9fB206bADb396C6444";
 
-const ADAPTER_POST_JOB_ID = "52de582e45624c7086c0419ba4c8c243";
+const ADAPTER_POST_JOB_ID = "1680e8b0e07341b8acf3f6746fdd4dc4";
 const PAYMENT = 1;
 
 contract('Payout Integration Tests', async (accounts) => {
@@ -21,13 +21,13 @@ contract('Payout Integration Tests', async (accounts) => {
   let requester = accounts[0];
 
   before('deploy PayoutClient', async() => {
-//    payoutClient = await PayoutClient.new(
-//      LinkTokenAddress,
-//      PayoutOracleAddress
-//    );
-//    console.log("PayoutClient Address: " + payoutClient.address)
+  //  payoutClient = await PayoutClient.new(
+  //    LinkTokenAddress,
+  //    PayoutOracleAddress
+  //  );
+  //  console.log("PayoutClient Address: " + payoutClient.address)
 
-    payoutClient = await PayoutClient.at("0x451d50f9C89E2bfdC6498481716c61e545751BeB");
+    payoutClient = await PayoutClient.at("0x92F7453e9ACBcE4e2aB4A08Ba71EA0C34a8Ec246");
   });
 
   describe("Test initial values", async () => {
@@ -44,25 +44,27 @@ contract('Payout Integration Tests', async (accounts) => {
 
   describe("Test request", async () => {
     it("Test requestCreateGame is successful in requesting to payout", async() => {
-        
-        //give approval to factory
-        let token = await LinkToken.at(LinkTokenAddress);
-        let decimals = (await token.decimals.call()).toNumber();
-        let paymentAmount = new BigNumber(PAYMENT * Math.pow(10, decimals));
-        await token.approve(payoutClient.address, paymentAmount);
 
-        let trx = await payoutClient.requestPayout(ethers.utils.toUtf8Bytes(ADAPTER_POST_JOB_ID), paymentAmount);
+      let token = await LinkToken.at(LinkTokenAddress);	
+      let decimals = (await token.decimals.call()).toNumber();	
+      let paymentAmount = new BigNumber(PAYMENT * Math.pow(10, decimals));	
 
-        //listen for event and capture the requestId
-        truffleAssert.eventEmitted(trx, 'RequestPayout', (e) => {
-            //capture requestId
-            requestId = e.requestId;
-            return e.sender === requester;
-        }); 
+      let trx = await payoutClient.requestPayout(
+        ethers.utils.toUtf8Bytes(ADAPTER_POST_JOB_ID), 
+        "sb-nbsys1565094@personal.example.com", 
+        {value: paymentAmount}
+      );
 
-        console.log("Request ID: " + requestId)
+      //listen for event and capture the requestId
+      truffleAssert.eventEmitted(trx, 'RequestPayout', (e) => {
+          //capture requestId
+          requestId = e.requestId;
+          return e.sender === requester;
+      }); 
 
-        // NOTE: at this point the user would be waiting for the oracle to call the contract back
+      console.log("Request ID: " + requestId)
+
+      // NOTE: at this point the user would be waiting for the oracle to call the contract back
     });
     
     it("Test oracle callback fullfillRequest", async() => {

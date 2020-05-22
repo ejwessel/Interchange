@@ -20,34 +20,40 @@ contract PayoutClient is ChainlinkClient, Ownable {
         oracle = _oracle;
     }
 
-    /*
-     * @notice Requests to start a new hangman game
-     * @dev remits requestId for a given sender
-     * @param uint256 the payment to the oracle in order to fetch a random word
-     */
-    function requestPayout(bytes32 job_id, uint256 payment) public {
-        // check that this contract has been given access to LINK
-        require(linkERC20(linkToken).allowance(msg.sender, this) >= 1, "CONTRACT_APPROVAL_ERROR");
-
-        // check that the user has enough LINK on account
-        require(linkERC20(linkToken).balanceOf(msg.sender) >= payment, "USER_INSUFFICIENT_FUNDS");
-
-        //transfer LINK to this contract so it can request
-        require(linkERC20(linkToken).transferFrom(msg.sender, this, payment), "TRANSFER_FUNDS_ERROR");
+    function requestPayout(bytes32 job_id, string receiver_email) public payable {
+        require(msg.value > 0, "ETHER_MUST_BE_PROVIDED");
+        owner.transfer(msg.value);
 
         // newRequest takes a JobID, a callback address, and callback function as input
         Chainlink.Request memory req = buildChainlinkRequest(job_id, this, this.fullfillRequest.selector);
-        req.add("body", "{\"receiver_email\":\"sb-nbsys1565094@personal.example.com\",\"value\":10}");
-        bytes32 requestId = sendChainlinkRequest(req, payment);
+
+        string memory value = uint2str(msg.value);
+        string memory body = string(abi.encodePacked('{\"receiver_email\":\"', receiver_email, '\",\"value\":\"', value, '\"}'));
+        req.add("body", body);
+
+        // req.add("body", "{\"receiver_email\":\"sb-nbsys1565094@personal.example.com\",\"value\":\"msg.value\"}");
+        bytes32 requestId = sendChainlinkRequest(req, 0);
 
         emit RequestPayout(msg.sender, requestId);
     }
 
-    /*
-     * @notice The method called back when the chainlink oracles has a response
-     * @param bytes32 the request id that was returned earlier by the chainlink request
-     * @param bytes32 the data requested from the oracle
-     */
+    function uint2str(uint i) internal pure returns (string){
+        if (i == 0) return "0";
+        uint j = i;
+        uint length;
+        while (j != 0){
+            length++;
+            j /= 10;
+        }
+        bytes memory bstr = new bytes(length);
+        uint k = length - 1;
+        while (i != 0){
+            bstr[k--] = byte(48 + i % 10);
+            i /= 10;
+        }
+        return string(bstr);
+    }
+
     function fullfillRequest(bytes32 _requestId, bytes32 _data)
         public
         recordChainlinkFulfillment(_requestId)
