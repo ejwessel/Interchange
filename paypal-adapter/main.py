@@ -14,8 +14,6 @@ load_dotenv(verbose=True)
 CLIENT_ID = os.environ["PAYPAL-CLIENT-ID"] if 'PAYPAL-CLIENT-ID' in os.environ else "PAYPAL-CLIENT-ID"
 CLIENT_SECRET = os.environ["PAYPAL-CLIENT-SECRET"] if 'PAYPAL-CLIENT-SECRET' in os.environ else "PAYPAL-CLIENT-SECRET"
 
-CMC_KEY = None
-CMC_URL = None
 if 'DEVELOPMENT' in os.environ and bool(os.environ['DEVELOPMENT']):
     print("development mode")
     CMC_KEY = os.environ["X-CMC_SANDBOX_API_KEY"] if 'X-CMC_SANDBOX_API_KEY' in os.environ else "X-CMC_SANDBOX_API_KEY"
