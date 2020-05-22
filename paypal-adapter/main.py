@@ -90,6 +90,7 @@ def post_payout():
         # Call API with your client and get a response for your call
         response = client.execute(paypal_request)
         print(response)
+        print(f"Sender Batch ID, Payout Batch ID: {response.result.batch_header.sender_batch_header.sender_batch_id}, {response.result.batch_header.payout_batch_id}")
         return_data = {
             "jobRunID": job_id,
             "status": str(response.status_code)
