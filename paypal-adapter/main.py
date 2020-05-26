@@ -106,6 +106,27 @@ def post_payout():
         print(f"Return data: {return_data}")
         return jsonify(return_data)
 
+@app.route('/payment/<string:payment_id>')
+def get_payment(payment_id):
+    print("Not Implemented")
+    return "200"
+
+@app.route('/payment', methods=['POST'])
+def post_payment():
+    data = request.json
+    print(f"Incoming data: {data}")
+
+    # Note: It's likely the case that the order needs to be created through the API first.
+
+    # verify the incoming data is from Paypal (use API)
+    # There is no webhook support in them SDK
+
+    # Determine how to get the address from the order It would
+
+    # send TRX of ETH to address
+
+    return "200"
+
 
 def fetch_eth_usd_rate():
     headers = {
